@@ -43,6 +43,7 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
+
         $this->validate($request, [
             'name' => 'required',
             'email' => 'required|email|unique:users,email',
@@ -52,7 +53,6 @@ class UserController extends Controller
 
         $input = $request->all();
         // $input['password'] = Hash::make($input['password']);
-        $input['password'] = $input['password'];
 
         $user = User::create($input);
         $user->assignRole($request->input('roles'));
@@ -70,6 +70,9 @@ class UserController extends Controller
     public function show($id)
     {
         $user = User::find($id);
+        $userRole = $user->roles->pluck('name','name')->all();
+        $roles = $user->getRoleNames();
+
         return view('users.show',compact('user'));
     }
 
@@ -107,7 +110,7 @@ class UserController extends Controller
         $input = $request->all();
         if(!empty($input['password'])){
             // $input['password'] = Hash::make($input['password']);
-            $input['password'] = $input['password'];
+            // $input['password'] = $input['password'];
         }else{
             $input = Arr::except($input,array('password'));
         }
